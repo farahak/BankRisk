@@ -1,0 +1,29 @@
+name: Deploy to Kubernetes
+
+on:
+  workflow_dispatch:  # Manual trigger only for now
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'latest'
+
+      # Uncomment and configure when you have a remote cluster
+      # - name: Set Kubeconfig
+      #   uses: azure/k8s-set-context@v3
+      #   with:
+      #     method: kubeconfig
+      #     kubeconfig: ${{ secrets.KUBECONFIG }}
+
+      - name: Apply Kubernetes manifests
+        run: |
+          # This will fail without a configured cluster context
+          # kubectl apply -f devops/k8s/
+          echo "Deployment step is currently a placeholder. Configure KUBECONFIG secret to enable."
