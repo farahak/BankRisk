@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: grafana-dashboard-provider
+  name: dash-provider
 data:
   django.yaml: |
     apiVersion: 1

@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-django
+data:
+  django-dashboard.json: |
+    {
+      "dashboard": {
+        "title": "Django Application Metrics",
+        "tags": ["django", "bankrisk"],
+        "timezone": "browser",
+        "panels": [
+          {
+            "title": "HTTP Requests Total",
+            "targets": [
+              {
+                "expr": "rate(django_http_requests_total_by_method_total[5m])",
+                "legendFormat": "{{method}}"
+              }
+            ],
+            "type": "graph",
+            "gridPos": {"x": 0, "y": 0, "w": 12, "h": 8}
+          },
+          {
+            "title": "Request Latency",
+            "targets": [
+              {
+                "expr": "django_http_requests_latency_seconds_by_view_method",
+                "legendFormat": "{{view}} - {{method}}"
+              }
+            ],
+            "type": "graph",
+            "gridPos": {"x": 12, "y": 0, "w": 12, "h": 8}
+          },
+          {
+            "title": "Database Connections",
+            "targets": [
+              {
+                "expr": "django_db_connections_total",
+                "legendFormat": "Connections"
+              }
+            ],
+            "type": "graph",
+            "gridPos": {"x": 0, "y": 8, "w": 12, "h": 8}
+          },
+          {
+            "title": "CPU Usage by Pod",
+            "targets": [
+              {
+                "expr": "rate(container_cpu_usage_seconds_total{pod=~\"backend.*\"}[5m])",
+                "legendFormat": "{{pod}}"
+              }
+            ],
+            "type": "graph",
+            "gridPos": {"x": 12, "y": 8, "w": 12, "h": 8}
+          }
+        ],
+        "schemaVersion": 16,
+        "version": 0
+      }
+    }

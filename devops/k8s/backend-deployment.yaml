@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: backend:latest
+        image: farah369/backend:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8000
@@ -34,8 +34,11 @@ spec:
   selector:
     app: backend
   ports:
-    - protocol: TCP
+    - name: http
+      protocol: TCP
       port: 8000
       targetPort: 8000
     - name: metrics
-      containerPort: 8000
+      protocol: TCP
+      port: 9090
+      targetPort: 8000
