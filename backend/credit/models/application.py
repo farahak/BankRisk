@@ -1,5 +1,4 @@
-# backend/credit/models/application.py
-from mongoengine import Document, ReferenceField, StringField, IntField, FloatField, DateTimeField
+from mongoengine import Document, ReferenceField, StringField, IntField, FloatField, DateTimeField, DictField
 from .client import Client
 import datetime
 
@@ -27,6 +26,8 @@ class CreditApplication(Document):
     # Évaluation du risque
     risk = StringField(choices=['good', 'bad', 'pending'], default='pending')
     risk_score = FloatField(min_value=0, max_value=100)  # Score de risque en %
+    interest_rate = FloatField() # Taux d'intérêt calculé
+    analysis_details = DictField() # Détails de l'analyse (facteurs)
     
     # Statut de la demande
     status = StringField(choices=['pending', 'approved', 'rejected'], default='pending')

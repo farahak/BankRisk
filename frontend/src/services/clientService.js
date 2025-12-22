@@ -3,7 +3,7 @@ import api from './api';
 
 const clientService = {
   // ============ CLIENTS ============
-  
+
   // Récupérer tous les clients
   getAllClients: async () => {
     try {
@@ -143,15 +143,14 @@ const clientService = {
 
   // Soumettre une nouvelle demande de crédit
   submitCreditApplication: async (applicationData) => {
-    try {
-      console.log('📤 Soumission de la demande:', applicationData);
-      const response = await api.post('/applications/', applicationData);
-      console.log('✅ Demande soumise:', response.data);
-      return response.data;
-    } catch (error) {
-      console.error('❌ Erreur submitCreditApplication:', error.response?.data || error);
-      throw error.response?.data || error.message;
-    }
+    const response = await api.post('/applications/', applicationData);
+    return response.data;
+  },
+
+  // Estimer le taux d'intérêt en temps réel
+  estimateInterestRate: async (data) => {
+    const response = await api.post('/applications/estimate_interest/', data);
+    return response.data;
   },
 
   // Évaluer une demande (Admin)
@@ -181,28 +180,123 @@ const clientService = {
 
   // ============ STATISTIQUES (pour Admin) ============
 
-  // Obtenir les statistiques du dashboard
+  // Obtenir les statistiques du dashboard (optimisé)
   getDashboardStats: async () => {
     try {
-      const [clients, applications] = await Promise.all([
-        clientService.getAllClients(),
-        clientService.getAllApplications()
-      ]);
-
-      const stats = {
-        totalClients: clients.length,
-        totalApplications: applications.length,
-        approved: applications.filter(app => app.status === 'approved').length,
-        pending: applications.filter(app => app.status === 'pending').length,
-        rejected: applications.filter(app => app.status === 'rejected').length,
-        riskGood: applications.filter(app => app.risk === 'good').length,
-        riskBad: applications.filter(app => app.risk === 'bad').length,
-      };
-
-      console.log('📊 Statistiques:', stats);
-      return stats;
+      const response = await api.get('/stats/dashboard/');
+      console.log('📊 Statistiques du dashboard récupérées:', response.data);
+      return response.data;
     } catch (error) {
       console.error('❌ Erreur getDashboardStats:', error);
+      throw error.response?.data || error.message;
+    }
+  },
+
+  // ============ MESSAGERIE ============
+
+  // Récupérer la conversation pour une demande
+  getConversation: async (applicationId) => {
+    try {
+      const response = await api.get(`/messages/conversation/${applicationId}/`);
+      console.log('💬 Conversation récupérée:', response.data.length, 'messages');
+      return response.data;
+    } catch (error) {
+      console.error('❌ Erreur getConversation:', error);
+      throw error.response?.data || error.message;
+    }
+  },
+
+  // Envoyer un nouveau message avec pièces jointes
+  sendMessage: async (messageData, files = []) => {
+    try {
+      const formData = new FormData();
+      formData.append('application_id', messageData.application_id);
+      formData.append('subject', messageData.subject || '');
+      formData.append('content', messageData.content);
+
+      if (messageData.parent_message_id) {
+        formData.append('parent_message_id', messageData.parent_message_id);
+      }
+
+      // Ajouter les fichiers
+      files.forEach(file => {
+        formData.append('attachments', file);
+      });
+
+      const response = await api.post('/messages/', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      console.log('✅ Message envoyé:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Erreur sendMessage:', error);
+      throw error.response?.data || error.message;
+    }
+  },
+
+  // Répondre à un message
+  replyToMessage: async (messageId, content, files = []) => {
+    try {
+      const formData = new FormData();
+      formData.append('content', content);
+
+      files.forEach(file => {
+        formData.append('attachments', file);
+      });
+
+      const response = await api.post(`/messages/${messageId}/reply/`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      console.log('✅ Réponse envoyée:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Erreur replyToMessage:', error);
+      throw error.response?.data || error.message;
+    }
+  },
+
+  // Marquer un message comme lu
+  markMessageAsRead: async (messageId) => {
+    try {
+      const response = await api.patch(`/messages/${messageId}/mark_read/`);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Erreur markMessageAsRead:', error);
+      throw error.response?.data || error.message;
+    }
+  },
+
+  // Compter les messages non lus
+  getUnreadCount: async () => {
+    try {
+      const response = await api.get('/messages/unread_count/');
+      return response.data.unread_count || 0;
+    } catch (error) {
+      console.error('❌ Erreur getUnreadCount:', error);
+      return 0;
+    }
+  },
+
+  // Télécharger une pièce jointe
+  downloadAttachment: async (attachmentId, filename) => {
+    try {
+      const response = await api.get(`/attachments/${attachmentId}/download/`, {
+        responseType: 'blob'
+      });
+
+      // Créer un lien de téléchargement
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+
+      console.log('✅ Fichier téléchargé:', filename);
+    } catch (error) {
+      console.error('❌ Erreur downloadAttachment:', error);
       throw error.response?.data || error.message;
     }
   },

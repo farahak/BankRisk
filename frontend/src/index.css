@@ -1,13 +1,52 @@
+:root {
+  /* BTK Bank Brand Palette */
+  --btk-primary: #136DA5;
+  --btk-primary-dark: #0F5682;
+  --btk-secondary: #5B83C9;
+  --btk-accent: #E11B22; /* Rouge BTK pour accents */
+  --btk-grey: #333333;
+  --btk-grey-light: #F1F5F9;
+  --btk-white: #FFFFFF;
+  
+  /* UI Tokens */
+  --bg-gradient: linear-gradient(135deg, #136DA5 0%, #0F5682 100%);
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+  --border-radius: 12px;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #F8FAFC;
+  color: var(--btk-grey);
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* Custom Utilities */
+.btk-gradient-text {
+  background: var(--bg-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.btk-card {
+  background: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-md);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btk-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
 }

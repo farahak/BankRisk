@@ -1,0 +1,142 @@
+@startuml BankRisk_Use_Case_Global
+
+!define RECTANGLE class
+
+skinparam actorStyle awesome
+skinparam packageStyle rectangle
+
+title Diagramme de Cas d'Utilisation Global - BankRisk
+
+' Acteurs
+actor "Client" as Client
+actor "Administrateur" as Admin
+actor "Système IA" as AI
+
+' Package principal
+package "Système BankRisk" {
+    
+    ' Gestion des utilisateurs
+    package "Gestion des Comptes" {
+        usecase "S'inscrire" as UC1
+        usecase "Se connecter" as UC2
+        usecase "Se déconnecter" as UC3
+        usecase "Gérer profil" as UC4
+    }
+    
+    ' Gestion des demandes de crédit
+    package "Gestion des Demandes de Crédit" {
+        usecase "Soumettre demande\nde crédit" as UC5
+        usecase "Consulter mes\ndemandes" as UC6
+        usecase "Modifier demande\nen attente" as UC7
+        usecase "Évaluer demande" as UC8
+        usecase "Approuver/Rejeter\ndemande" as UC9
+        usecase "Consulter toutes\nles demandes" as UC10
+    }
+    
+    ' Analyse et scoring
+    package "Analyse de Risque" {
+        usecase "Calculer score\nde risque (IA)" as UC11
+        usecase "Déterminer taux\nd'intérêt" as UC12
+        usecase "Générer rapport\nd'analyse" as UC13
+        usecase "Consulter historique\ndes analyses" as UC14
+    }
+    
+    ' Messagerie
+    package "Messagerie Sécurisée" {
+        usecase "Envoyer message\navec PDF" as UC15
+        usecase "Consulter messages" as UC16
+        usecase "Répondre à\nun message" as UC17
+        usecase "Télécharger\npièce jointe" as UC18
+        usecase "Supprimer\npièce jointe" as UC19
+    }
+    
+    ' Tableau de bord et statistiques
+    package "Tableaux de Bord" {
+        usecase "Consulter dashboard\nclient" as UC20
+        usecase "Consulter dashboard\nadmin" as UC21
+        usecase "Générer statistiques" as UC22
+        usecase "Exporter rapports" as UC23
+    }
+    
+    ' Gestion des clients (Admin)
+    package "Gestion des Clients" {
+        usecase "Consulter liste\ndes clients" as UC24
+        usecase "Créer nouveau\nclient" as UC25
+        usecase "Modifier client" as UC26
+        usecase "Supprimer client" as UC27
+    }
+}
+
+' Relations Client
+Client --> UC1
+Client --> UC2
+Client --> UC3
+Client --> UC4
+Client --> UC5
+Client --> UC6
+Client --> UC7
+Client --> UC16
+Client --> UC17
+Client --> UC18
+Client --> UC20
+
+' Relations Administrateur
+Admin --> UC2
+Admin --> UC3
+Admin --> UC8
+Admin --> UC9
+Admin --> UC10
+Admin --> UC14
+Admin --> UC15
+Admin --> UC16
+Admin --> UC17
+Admin --> UC18
+Admin --> UC19
+Admin --> UC21
+Admin --> UC22
+Admin --> UC23
+Admin --> UC24
+Admin --> UC25
+Admin --> UC26
+Admin --> UC27
+
+' Relations Système IA
+AI --> UC11
+AI --> UC12
+AI --> UC13
+
+' Relations Include
+UC5 ..> UC11 : <<include>>
+UC8 ..> UC11 : <<include>>
+UC8 ..> UC12 : <<include>>
+UC8 ..> UC13 : <<include>>
+UC15 ..> UC18 : <<extend>>
+UC17 ..> UC18 : <<extend>>
+
+' Relations Extend
+UC6 ..> UC7 : <<extend>>
+UC10 ..> UC8 : <<extend>>
+UC16 ..> UC17 : <<extend>>
+
+' Notes
+note right of UC11
+  Utilise l'algorithme KNN
+  basé sur German Credit Dataset
+end note
+
+note right of UC15
+  Supporte uniquement
+  les fichiers PDF (max 5MB)
+end note
+
+note bottom of Admin
+  Accès complet à toutes
+  les fonctionnalités
+end note
+
+note bottom of Client
+  Accès limité à ses
+  propres données
+end note
+
+@enduml

@@ -50,7 +50,11 @@ MIDDLEWARE = [
 # CORS Configuration
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    "http://localhost:3001",
     "http://localhost:5173",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:3001",
+    "http://127.0.0.1:5173",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -75,22 +79,26 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'bankrisk_backend.wsgi.application'
 
+# Load environment variables
+load_dotenv()
+
 # MongoDB Configuration
+MONGO_URI = os.getenv('MONGO_URI', 'mongodb://localhost:27017/bankrisk_db')
+
 try:
     mongoengine.connect(
-        db='bankrisk_db',
-        host='mongodb://localhost:27017/bankrisk_db',
+        host=MONGO_URI,
         alias='default'
     )
     print("✅ MongoDB connecté avec succès!")
 except Exception as e:
     print(f"❌ Erreur de connexion MongoDB: {e}")
 
-# Dummy database pour Django
-
+# Relational Database for Django Internals (Sessions, Admin, etc.)
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.dummy"   # empêche Django d'utiliser une DB SQL
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -118,6 +126,17 @@ USE_TZ = True
 
 # Static files
 STATIC_URL = 'static/'
+
+# Media files (uploads)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# File upload settings
+FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
+DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
+
+# Allowed file types for uploads
+ALLOWED_UPLOAD_EXTENSIONS = ['.pdf']
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

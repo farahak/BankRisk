@@ -2,6 +2,7 @@
 import os
 import sys
 import django
+from dotenv import load_dotenv
 
 # Configuration Django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'bankrisk_backend.settings')
@@ -21,8 +22,10 @@ def check_database():
     
     # 1. Connexion à MongoDB
     print("\n1️⃣  Connexion à MongoDB...")
+    load_dotenv()
+    MONGO_URI = os.getenv('MONGO_URI', 'mongodb://localhost:27017/bankrisk_db')
     try:
-        db = connect(db='bankrisk_db', host='mongodb://localhost:27017/bankrisk_db', alias='default')
+        db = connect(host=MONGO_URI, alias='default')
         connection = db.get_database()
         print("   ✅ Connexion réussie!")
         

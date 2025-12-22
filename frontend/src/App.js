@@ -9,6 +9,7 @@ import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import ClientDashboard from './components/client/ClientDashboard';
 import ClientProfile from './components/client/ClientProfile';
+import ClientMessages from './components/client/ClientMessages';
 import CreditApplication from './components/client/CreditApplication';
 import AdminDashboard from './components/admin/AdminDashboard';
 import AdminAnalytics from './components/admin/AdminAnalytics';
@@ -17,36 +18,61 @@ import ClientDetail from './components/admin/ClientDetail';
 import DebugAPI from './components/admin/DebugAPI';
 import NewClient from './components/admin/NewClient';
 import ApplicationDetail from './components/admin/ApplicationDetail';
+import LandingPage from './components/public/LandingPage';
 
 import authService from './services/authService';
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#1976d2',
+      main: '#136DA5', // BTK Blue
+      dark: '#0F5682',
+      contrastText: '#FFFFFF',
     },
     secondary: {
-      main: '#dc004e',
-    },
-    success: {
-      main: '#10b981',
-    },
-    warning: {
-      main: '#f59e0b',
+      main: '#5B83C9', // BTK Secondary Blue
     },
     error: {
-      main: '#ef4444',
+      main: '#E11B22', // BTK Accent Red
+    },
+    background: {
+      default: '#F8FAFC',
+      paper: '#FFFFFF',
+    },
+    text: {
+      primary: '#333333',
+      secondary: '#64748B',
     },
   },
   typography: {
     fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
+    h1: { fontWeight: 700 },
+    h2: { fontWeight: 700 },
+    h3: { fontWeight: 600 },
+    button: { textTransform: 'none', fontWeight: 600 },
+  },
+  shape: {
+    borderRadius: 12,
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          padding: '10px 24px',
+          boxShadow: 'none',
+          '&:hover': {
+            boxShadow: '0 4px 12px rgba(19, 109, 165, 0.2)',
+          },
+        },
+      },
+    },
   },
 });
 
 // Composant de redirection intelligente
 function SmartRedirect() {
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     if (authService.isAuthenticated()) {
       if (authService.isAdmin()) {
@@ -58,7 +84,7 @@ function SmartRedirect() {
       navigate('/login');
     }
   }, [navigate]);
-  
+
   return null;
 }
 
@@ -87,7 +113,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Router>
+      <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <Routes>
           {/* Routes publiques */}
           <Route path="/login" element={<Login />} />
@@ -117,6 +143,14 @@ function App() {
             element={
               <PrivateRoute>
                 <ClientProfile />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/client/messages"
+            element={
+              <PrivateRoute>
+                <ClientMessages />
               </PrivateRoute>
             }
           />
@@ -163,7 +197,7 @@ function App() {
               </PrivateRoute>
             }
           />
-           <Route
+          <Route
             path="/admin/clients/new"
             element={
               <PrivateRoute adminOnly={true}>
@@ -180,9 +214,12 @@ function App() {
             }
           />
 
-          {/* Redirection par défaut */}
-          <Route path="/" element={<SmartRedirect />} />
-          <Route path="*" element={<SmartRedirect />} />
+          {/* Public Landing Page */}
+          <Route path="/" element={<LandingPage />} />
+
+          {/* Redirection par défaut (si déjà connecté) */}
+          <Route path="/home" element={<SmartRedirect />} />
+          <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Router>
     </ThemeProvider>

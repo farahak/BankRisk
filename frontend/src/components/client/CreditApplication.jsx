@@ -42,13 +42,15 @@ const CreditApplication = () => {
   const [success, setSuccess] = useState(false);
   const [hasProfile, setHasProfile] = useState(false);
   const [clientId, setClientId] = useState(null);
+  const [interestRate, setInterestRate] = useState(4.5);
+  const [monthlyPayment, setMonthlyPayment] = useState(0);
 
   const [formData, setFormData] = useState({
     // Informations du crédit
     credit_amount: '',
     duration: '',
     purpose: 'car',
-    
+
     // Informations du profil (si manquant)
     age: '',
     sex: 'male',
@@ -62,12 +64,38 @@ const CreditApplication = () => {
     checkUserProfile();
   }, []);
 
+  useEffect(() => {
+    if (formData.credit_amount && formData.duration) {
+      updateEstimation();
+    }
+  }, [formData.credit_amount, formData.duration, formData.age, formData.job, formData.housing, formData.saving_accounts]);
+
+  const updateEstimation = async () => {
+    try {
+      const estData = await clientService.estimateInterestRate(formData);
+      setInterestRate(estData.interest_rate);
+
+      const amount = parseFloat(formData.credit_amount);
+      const duration = parseInt(formData.duration);
+      const rate = estData.interest_rate / 100 / 12; // Taux mensuel
+
+      if (rate > 0) {
+        const payment = (amount * rate) / (1 - Math.pow(1 + rate, -duration));
+        setMonthlyPayment(payment.toFixed(2));
+      } else {
+        setMonthlyPayment((amount / duration).toFixed(2));
+      }
+    } catch (err) {
+      console.error('Estimation error:', err);
+    }
+  };
+
   const checkUserProfile = async () => {
     try {
       setCheckingProfile(true);
       const userEmail = authService.getCurrentUser();
       const client = await clientService.getClientByEmail(userEmail);
-      
+
       if (client) {
         setHasProfile(true);
         setClientId(client.id);
@@ -116,7 +144,7 @@ const CreditApplication = () => {
         return;
       }
     }
-    
+
     if (activeStep === 1 && !hasProfile) {
       if (!formData.age || !formData.sex || !formData.job || !formData.housing) {
         setError('Veuillez remplir tous les champs obligatoires');
@@ -160,7 +188,7 @@ const CreditApplication = () => {
 
       await clientService.submitCreditApplication(applicationData);
       setSuccess(true);
-      
+
       setTimeout(() => {
         navigate('/client/dashboard');
       }, 3000);
@@ -260,16 +288,35 @@ const CreditApplication = () => {
             </Grid>
 
             <Grid item xs={12}>
-              <Card elevation={0} sx={{ bgcolor: '#e3f2fd', border: 'none' }}>
+              <Card
+                elevation={0}
+                sx={{
+                  bgcolor: 'rgba(19, 109, 165, 0.05)',
+                  border: '1px solid rgba(19, 109, 165, 0.1)',
+                  borderRadius: 2
+                }}
+              >
                 <CardContent>
-                  <Typography variant="body2" color="primary">
-                    💡 <strong>Mensualité estimée:</strong>{' '}
-                    {formData.credit_amount && formData.duration
-                      ? `${(parseFloat(formData.credit_amount) / parseInt(formData.duration)).toFixed(2)} €/mois`
-                      : '- €'}
-                  </Typography>
-                  <Typography variant="caption" color="primary" sx={{ mt: 1, display: 'block' }}>
-                    Calcul basé sur un remboursement constant sur la durée du crédit
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} sm={6}>
+                      <Typography variant="body2" color="primary" sx={{ fontWeight: 600 }}>
+                        Estimatif Taux annuel (TAEG)
+                      </Typography>
+                      <Typography variant="h4" color="primary" sx={{ fontWeight: 800 }}>
+                        {interestRate}%
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
+                        Mensualité estimée
+                      </Typography>
+                      <Typography variant="h4" sx={{ fontWeight: 800 }}>
+                        {monthlyPayment} €/mois
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                  <Typography variant="caption" color="text.secondary" sx={{ mt: 2, display: 'block', fontStyle: 'italic' }}>
+                    * Le taux final sera déterminé par l'analyse approfondie de votre dossier par nos experts.
                   </Typography>
                 </CardContent>
               </Card>
@@ -466,10 +513,6 @@ const CreditApplication = () => {
         );
 
       case 2:
-        const monthlyPayment = formData.credit_amount && formData.duration
-          ? (parseFloat(formData.credit_amount) / parseInt(formData.duration)).toFixed(2)
-          : 0;
-
         return (
           <Grid container spacing={3}>
             <Grid item xs={12}>
@@ -482,8 +525,8 @@ const CreditApplication = () => {
             </Grid>
 
             <Grid item xs={12}>
-              <Card elevation={0} sx={{ border: '2px solid', borderColor: 'primary.main' }}>
-                <CardContent>
+              <Card elevation={0} sx={{ border: '2px solid', borderColor: 'primary.main', borderRadius: 3 }}>
+                <CardContent sx={{ p: 3 }}>
                   <Grid container spacing={3}>
                     <Grid item xs={12} sm={6}>
                       <Typography variant="caption" color="text.secondary">
@@ -505,10 +548,10 @@ const CreditApplication = () => {
 
                     <Grid item xs={12} sm={6}>
                       <Typography variant="caption" color="text.secondary">
-                        Objectif
+                        Taux d'intérêt estimé
                       </Typography>
-                      <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                        {getPurposeLabel(formData.purpose)}
+                      <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+                        {interestRate}%
                       </Typography>
                     </Grid>
 
@@ -516,8 +559,8 @@ const CreditApplication = () => {
                       <Typography variant="caption" color="text.secondary">
                         Mensualité estimée
                       </Typography>
-                      <Typography variant="h6" color="success.main" sx={{ fontWeight: 'bold' }}>
-                        ~{monthlyPayment} €/mois
+                      <Typography variant="h5" color="success.main" sx={{ fontWeight: 'bold' }}>
+                        {monthlyPayment} €/mois
                       </Typography>
                     </Grid>
                   </Grid>
@@ -562,7 +605,7 @@ const CreditApplication = () => {
             <Grid item xs={12}>
               <Alert severity="info">
                 <Typography variant="body2">
-                  ⚠️ En soumettant cette demande, vous acceptez que vos informations soient analysées par notre système d'évaluation de crédit basé sur l'IA et le German Credit Dataset. 
+                  ⚠️ En soumettant cette demande, vous acceptez que vos informations soient analysées par notre système d'évaluation de crédit basé sur l'IA et le German Credit Dataset.
                   Vous recevrez une réponse sous 24-48 heures.
                 </Typography>
               </Alert>
@@ -584,7 +627,7 @@ const CreditApplication = () => {
             Demande soumise avec succès !
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-            Votre demande de crédit est en cours d'analyse par notre système IA basé sur le German Credit Dataset. 
+            Votre demande de crédit est en cours d'analyse par notre système IA basé sur le German Credit Dataset.
             Vous recevrez une notification dès que nous aurons terminé l'évaluation.
           </Typography>
           <CircularProgress size={30} />
@@ -652,8 +695,8 @@ const CreditApplication = () => {
                   {loading ? 'Soumission...' : 'Soumettre la demande'}
                 </Button>
               ) : (
-                <Button 
-                  variant="contained" 
+                <Button
+                  variant="contained"
                   onClick={handleNext}
                   disabled={checkingProfile}
                   size="large"

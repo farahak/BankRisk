@@ -34,6 +34,9 @@ class CreditApplicationSerializer(serializers.Serializer):
     evaluation_date = serializers.DateTimeField(read_only=True, allow_null=True)
     evaluator_comment = serializers.CharField(required=False, allow_blank=True)
     
+    interest_rate = serializers.FloatField(read_only=True, allow_null=True)
+    analysis_details = serializers.DictField(read_only=True, allow_null=True)
+    
     def get_client(self, obj):
         if obj.client:
             return {
@@ -41,6 +44,10 @@ class CreditApplicationSerializer(serializers.Serializer):
                 'user_email': obj.client.user_email or '',
                 'age': obj.client.age,
                 'sex': obj.client.sex,
+                'job': obj.client.job,
+                'housing': obj.client.housing,
+                'saving_accounts': obj.client.saving_accounts,
+                'checking_account': obj.client.checking_account,
             }
         return None
     
@@ -73,6 +80,8 @@ class CreditApplicationSerializer(serializers.Serializer):
             'purpose': instance.purpose,
             'risk': instance.risk,
             'risk_score': instance.risk_score,
+            'interest_rate': instance.interest_rate,
+            'analysis_details': instance.analysis_details,
             'status': instance.status,
             'submission_date': instance.submission_date.isoformat() if instance.submission_date else None,
             'evaluation_date': instance.evaluation_date.isoformat() if instance.evaluation_date else None,

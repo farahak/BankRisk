@@ -23,7 +23,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
   Chip,
   Avatar,
   CircularProgress,
@@ -38,9 +37,6 @@ import {
   ExitToApp,
   TrendingUp,
   TrendingDown,
-  Pending,
-  CheckCircle,
-  Cancel,
   Visibility,
 } from '@mui/icons-material';
 import {
@@ -64,7 +60,7 @@ const AdminDashboard = () => {
   const [currentView, setCurrentView] = useState('dashboard');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  
+
   const [stats, setStats] = useState({
     totalClients: 0,
     totalApplications: 0,
@@ -74,7 +70,7 @@ const AdminDashboard = () => {
     goodRisk: 0,
     badRisk: 0,
   });
-  
+
   const [recentApplications, setRecentApplications] = useState([]);
 
   useEffect(() => {
@@ -84,28 +80,21 @@ const AdminDashboard = () => {
   const loadDashboardData = async () => {
     try {
       setLoading(true);
-      const applications = await clientService.getAllApplications();
-      const clients = await clientService.getAllClients();
-      
-      // Calculer les statistiques
-      const approved = applications.filter(app => app.status === 'approved').length;
-      const pending = applications.filter(app => app.status === 'pending').length;
-      const rejected = applications.filter(app => app.status === 'rejected').length;
-      const goodRisk = applications.filter(app => app.risk === 'good').length;
-      const badRisk = applications.filter(app => app.risk === 'bad').length;
+      // Use optimized stats endpoint instead of fetching all data
+      const data = await clientService.getDashboardStats();
 
       setStats({
-        totalClients: clients.length,
-        totalApplications: applications.length,
-        approved,
-        pending,
-        rejected,
-        goodRisk,
-        badRisk,
+        totalClients: data.totalClients,
+        totalApplications: data.totalApplications,
+        approved: data.approved,
+        pending: data.pending,
+        rejected: data.rejected,
+        goodRisk: data.goodRisk,
+        badRisk: data.badRisk,
       });
 
-      // Applications récentes (5 dernières)
-      setRecentApplications(applications.slice(0, 5));
+      // Recent applications are now included in the stats response
+      setRecentApplications(data.recentApplications || []);
     } catch (err) {
       setError('Erreur lors du chargement des données');
       console.error(err);
@@ -159,7 +148,7 @@ const AdminDashboard = () => {
           </Box>
         </Box>
       </Toolbar>
-      
+
       <List>
         <ListItem
           button
@@ -224,7 +213,7 @@ const AdminDashboard = () => {
           >
             <MenuIcon />
           </IconButton>
-          
+
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
             Tableau de Bord Admin - German Credit Dataset
           </Typography>
@@ -255,7 +244,7 @@ const AdminDashboard = () => {
         >
           {drawer}
         </Drawer>
-        
+
         <Drawer
           variant="permanent"
           sx={{
@@ -471,10 +460,10 @@ const AdminDashboard = () => {
                         </TableCell>
                         <TableCell>
                           <Chip
-                            label={application.status === 'approved' ? 'Approuvé' : 
-                                   application.status === 'rejected' ? 'Rejeté' : 'En attente'}
-                            color={application.status === 'approved' ? 'success' : 
-                                   application.status === 'rejected' ? 'error' : 'warning'}
+                            label={application.status === 'approved' ? 'Approuvé' :
+                              application.status === 'rejected' ? 'Rejeté' : 'En attente'}
+                            color={application.status === 'approved' ? 'success' :
+                              application.status === 'rejected' ? 'error' : 'warning'}
                             size="small"
                           />
                         </TableCell>

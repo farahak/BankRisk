@@ -4,33 +4,25 @@ import api from './api';
 const authService = {
   // Inscription
   register: async (userData) => {
-    try {
-      const response = await api.post('/auth/register/', userData);
-      return response.data;
-    } catch (error) {
-      throw error.response?.data || error.message;
-    }
+    const response = await api.post('/auth/register/', userData);
+    return response.data;
   },
 
   // Connexion
   login: async (credentials) => {
-    try {
-      const response = await api.post('/auth/login/', credentials);
-      const { access, refresh, user } = response.data;
+    const response = await api.post('/auth/login/', credentials);
+    const { access, refresh, user } = response.data;
 
-      // Stocker les tokens et informations utilisateur
-      localStorage.setItem('access_token', access);
-      localStorage.setItem('refresh_token', refresh);
-      localStorage.setItem('user_id', user.id);
-      localStorage.setItem('user_email', user.email);
-      localStorage.setItem('user_first_name', user.first_name || '');
-      localStorage.setItem('user_last_name', user.last_name || '');
-      localStorage.setItem('is_staff', user.is_staff.toString());
+    // Stocker les tokens et informations utilisateur
+    localStorage.setItem('access_token', access);
+    localStorage.setItem('refresh_token', refresh);
+    localStorage.setItem('user_id', user.id);
+    localStorage.setItem('user_email', user.email);
+    localStorage.setItem('user_first_name', user.first_name || '');
+    localStorage.setItem('user_last_name', user.last_name || '');
+    localStorage.setItem('is_staff', user.is_staff.toString());
 
-      return response.data;
-    } catch (error) {
-      throw error.response?.data || error.message;
-    }
+    return response.data;
   },
 
   // Déconnexion

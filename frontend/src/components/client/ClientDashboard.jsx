@@ -27,6 +27,7 @@ import {
   Pending,
   Cancel,
   Warning,
+  Message,
 } from '@mui/icons-material';
 import authService from '../../services/authService';
 import clientService from '../../services/clientService';
@@ -48,11 +49,11 @@ const ClientDashboard = () => {
       setLoading(true);
       const userEmail = authService.getCurrentUser();
       const userFullName = authService.getCurrentUserFullName();
-      setUser({ 
+      setUser({
         email: userEmail,
-        fullName: userFullName 
+        fullName: userFullName
       });
-      
+
       // Charger le profil client
       const clientData = await clientService.getClientByEmail(userEmail);
       setClient(clientData);
@@ -154,12 +155,21 @@ const ClientDashboard = () => {
       <AppBar position="static" elevation={0}>
         <Toolbar>
           <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
-            <Typography variant="h6" sx={{ fontWeight: 'bold', mr: 1 }}>
-              BankRisk AI
+            <Typography variant="h6" sx={{ fontWeight: 800, mr: 1, color: 'primary.main' }}>
+              BTK <span style={{ color: '#333' }}>BankRisk</span>
             </Typography>
-            <Chip label="Client" size="small" color="secondary" />
+            <Chip label="Client" size="small" variant="outlined" color="primary" sx={{ fontWeight: 700 }} />
           </Box>
-          
+
+          <Button
+            color="inherit"
+            startIcon={<Message />}
+            onClick={() => navigate('/client/messages')}
+            sx={{ mr: 2 }}
+          >
+            Messages
+          </Button>
+
           <Button
             color="inherit"
             startIcon={<AccountCircle />}
@@ -168,7 +178,7 @@ const ClientDashboard = () => {
           >
             Mon Profil
           </Button>
-          
+
           <IconButton color="inherit" onClick={handleLogout}>
             <ExitToApp />
           </IconButton>
@@ -188,9 +198,10 @@ const ClientDashboard = () => {
           sx={{
             p: 4,
             mb: 4,
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            background: 'linear-gradient(135deg, #136DA5 0%, #0F5682 100%)',
             color: 'white',
             borderRadius: 3,
+            boxShadow: '0 10px 30px rgba(19, 109, 165, 0.2)',
           }}
         >
           <Grid container spacing={3} alignItems="center">
@@ -199,29 +210,40 @@ const ClientDashboard = () => {
                 sx={{
                   width: 80,
                   height: 80,
-                  bgcolor: 'white',
-                  color: 'primary.main',
+                  bgcolor: 'rgba(255,255,255,0.2)',
+                  color: 'white',
                   fontSize: '2rem',
+                  fontWeight: 800,
+                  border: '2px solid rgba(255,255,255,0.3)',
                 }}
               >
                 {user?.email?.charAt(0).toUpperCase()}
               </Avatar>
             </Grid>
             <Grid item xs>
-              <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold' }}>
-                Bienvenue sur BankRisk AI
+              <Typography variant="h4" gutterBottom sx={{ fontWeight: 800 }}>
+                Bienvenue sur BTK <span style={{ opacity: 0.8 }}>BankRisk</span>
               </Typography>
-              <Typography variant="body1" sx={{ opacity: 0.9 }}>
+              <Typography variant="body1" sx={{ opacity: 0.9, fontWeight: 500 }}>
                 {user?.fullName || user?.email}
               </Typography>
-              <Typography variant="body2" sx={{ mt: 1, opacity: 0.8 }}>
-                Système Intelligent d'Évaluation de Crédit - German Credit Dataset
+              <Typography variant="body2" sx={{ mt: 1, opacity: 0.7 }}>
+                Espace Client Sécurisé • German Credit Intelligence
               </Typography>
-              
+
               {!client && (
-                <Alert severity="warning" sx={{ mt: 2, bgcolor: 'rgba(255,255,255,0.1)' }}>
-                  <Typography variant="body2">
-                    ⚠️ Votre profil n'est pas complet. Complétez-le pour soumettre une demande de crédit.
+                <Alert
+                  severity="warning"
+                  sx={{
+                    mt: 2,
+                    bgcolor: 'rgba(255,152,0,0.1)',
+                    color: '#ff9800',
+                    border: '1px solid rgba(255,152,0,0.2)',
+                    '& .MuiAlert-icon': { color: '#ff9800' }
+                  }}
+                >
+                  <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                    ⚠️ Profil incomplet : Veuillez compléter vos informations pour libérer l'accès aux demandes de crédit.
                   </Typography>
                 </Alert>
               )}
@@ -327,7 +349,7 @@ const ClientDashboard = () => {
                 Aucune demande de crédit
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-                {client 
+                {client
                   ? "Vous n'avez pas encore soumis de demande de crédit"
                   : "Complétez votre profil pour soumettre votre première demande"
                 }
@@ -344,10 +366,10 @@ const ClientDashboard = () => {
             <Grid container spacing={2}>
               {applications.map((app) => (
                 <Grid item xs={12} key={app.id}>
-                  <Card 
-                    elevation={0} 
-                    sx={{ 
-                      border: '1px solid', 
+                  <Card
+                    elevation={0}
+                    sx={{
+                      border: '1px solid',
                       borderColor: 'divider',
                       cursor: 'pointer',
                       '&:hover': {
@@ -366,7 +388,7 @@ const ClientDashboard = () => {
                             {app.submission_date ? new Date(app.submission_date).toLocaleDateString('fr-FR') : 'N/A'}
                           </Typography>
                         </Grid>
-                        
+
                         <Grid item xs={12} sm={2}>
                           <Typography variant="caption" color="text.secondary">
                             Montant
@@ -375,7 +397,7 @@ const ClientDashboard = () => {
                             {app.credit_amount?.toLocaleString()} €
                           </Typography>
                         </Grid>
-                        
+
                         <Grid item xs={12} sm={2}>
                           <Typography variant="caption" color="text.secondary">
                             Durée
@@ -393,7 +415,7 @@ const ClientDashboard = () => {
                             {app.purpose}
                           </Typography>
                         </Grid>
-                        
+
                         <Grid item xs={12} sm={1}>
                           <Chip
                             label={getRiskLabel(app.risk)}
