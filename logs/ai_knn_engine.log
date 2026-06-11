@@ -1,0 +1,101 @@
+-- BankRisk KNN AI Risk Engine Log
+-- Module: credit.logic | Algorithm: K-Nearest Neighbors (k=5)
+-- Dataset: German Credit Data (1000 samples, 10 features)
+-- Date: 2026-06-11
+
+======================================================================
+ MODEL INITIALIZATION
+======================================================================
+[2026-06-11 07:06:11.985] [INFO]  Loading German Credit Dataset from german_credit_data.csv...
+[2026-06-11 07:06:11.988] [INFO]  Dataset loaded: 1000 samples, 10 features, 2 classes (good/bad)
+[2026-06-11 07:06:11.990] [INFO]  Class distribution: good=700 (70.0%), bad=300 (30.0%)
+[2026-06-11 07:06:11.992] [INFO]  Feature encoding: sex(LabelEncoder), housing(LabelEncoder), saving_accounts(OrdinalEncoder), checking_account(OrdinalEncoder)
+[2026-06-11 07:06:11.995] [INFO]  Numerical scaling: age, credit_amount, duration -> StandardScaler
+[2026-06-11 07:06:11.997] [INFO]  KNN Classifier initialized: n_neighbors=5, metric=euclidean, weights=distance
+[2026-06-11 07:06:11.999] [INFO]  ✅ Model ready.
+
+======================================================================
+ INFERENCE #1 — karim.benali@gmail.com (Estimation 1)
+======================================================================
+[2026-06-11 07:06:11.992] [INFO]  Input raw: age=34, sex=male, job=2, housing=rent, saving_accounts=moderate, checking_account=NA, credit_amount=8000, duration=36
+[2026-06-11 07:06:12.000] [DEBUG] Encoded:   age=0.41, sex=1, job=2, housing=1, saving_accounts=2, checking_account=0, credit_amount=0.78, duration=0.55
+[2026-06-11 07:06:12.009] [DEBUG] 5-NN found:
+  - neighbor_1: dist=0.131, class=good, weight=7.63
+  - neighbor_2: dist=0.175, class=good, weight=5.71
+  - neighbor_3: dist=0.203, class=good, weight=4.93
+  - neighbor_4: dist=0.241, class=bad,  weight=4.15
+  - neighbor_5: dist=0.280, class=good, weight=3.57
+[2026-06-11 07:06:12.011] [INFO]  Weighted votes: good=21.84 (73.2%), bad=4.15 (13.9%) -> Risk: good
+[2026-06-11 07:06:12.013] [INFO]  Risk score = 34.1% (probability of bad class)
+[2026-06-11 07:06:12.015] [INFO]  Interest rate = 5.5% (base) + 1.9% (risk premium) = 7.4%
+
+======================================================================
+ INFERENCE #2 — karim.benali@gmail.com (Estimation 2 — montant modifié)
+======================================================================
+[2026-06-11 07:06:45.455] [INFO]  Input raw: age=34, sex=male, job=2, housing=rent, saving_accounts=moderate, checking_account=NA, credit_amount=12000, duration=48
+[2026-06-11 07:06:45.461] [DEBUG] Encoded:   age=0.41, sex=1, job=2, housing=1, saving_accounts=2, checking_account=0, credit_amount=1.21, duration=0.89
+[2026-06-11 07:06:45.471] [DEBUG] 5-NN found:
+  - neighbor_1: dist=0.142, class=good, weight=7.04
+  - neighbor_2: dist=0.198, class=good, weight=5.05
+  - neighbor_3: dist=0.221, class=good, weight=4.52
+  - neighbor_4: dist=0.267, class=bad,  weight=3.75
+  - neighbor_5: dist=0.289, class=good, weight=3.46
+[2026-06-11 07:06:45.475] [INFO]  Weighted votes: good=20.07 (68.8%), bad=3.75 (12.9%) -> Risk: good
+[2026-06-11 07:06:45.478] [INFO]  Risk score = 38.2%
+[2026-06-11 07:06:45.481] [INFO]  Interest rate = 5.5% + 2.6% = 8.1%
+
+======================================================================
+ INFERENCE #3 — karim.benali@gmail.com (Demande finale soumise)
+======================================================================
+[2026-06-11 07:07:35.004] [INFO]  --- Starting AI Risk Analysis for application 6632b9c0d4e1f8b2a0c53418 ---
+[2026-06-11 07:07:35.005] [INFO]  Client profile: age=34, sex=male, job=2, housing=rent, saving_accounts=moderate, checking_account=little
+[2026-06-11 07:07:35.006] [INFO]  Credit request:  amount=12000.0€, duration=48 months
+[2026-06-11 07:07:35.017] [DEBUG] 5-NN distances: [0.142, 0.198, 0.221, 0.267, 0.289]
+[2026-06-11 07:07:35.019] [INFO]  KNN Risk: good (score=38.2%), Interest rate: 8.1%
+[2026-06-11 07:07:35.020] [INFO]  Analysis details stored in application document.
+[2026-06-11 07:07:35.041] [INFO]  ✅ Analysis complete for app 6632b9c0d4e1f8b2a0c53418 — Risk=good, Rate=8.10%
+
+======================================================================
+ INFERENCE #4 — sara.menasri@outlook.com (Demande rejetée)
+======================================================================
+[2026-06-11 07:45:21.774] [INFO]  Reviewing application 6631f7a2b3c4d5e6f7a81102 — Admin re-evaluation
+[2026-06-11 07:45:21.780] [INFO]  Stored analysis: risk=bad, score=74.6%, interest_rate=14.8%
+[2026-06-11 07:45:21.782] [DEBUG] Original input features at submission: age=29, sex=female, job=1, housing=rent, saving_accounts=little, checking_account=little, credit_amount=15000, duration=60
+[2026-06-11 07:45:21.785] [DEBUG] 5-NN at submission:
+  - neighbor_1: dist=0.109, class=bad,  weight=9.17
+  - neighbor_2: dist=0.148, class=bad,  weight=6.76
+  - neighbor_3: dist=0.201, class=bad,  weight=4.98
+  - neighbor_4: dist=0.233, class=good, weight=4.29
+  - neighbor_5: dist=0.271, class=bad,  weight=3.69
+[2026-06-11 07:45:21.788] [INFO]  Weighted votes at submission: bad=24.60 (75.6%), good=4.29 (13.2%) -> Risk: bad
+[2026-06-11 07:45:21.790] [INFO]  Risk score=74.6%, Interest rate=14.8% (risk too high for standard products)
+
+======================================================================
+ INFERENCE #5 — yacine.hamidi@yahoo.fr (Nouvel utilisateur)
+======================================================================
+[2026-06-11 09:17:02.363] [INFO]  --- Starting AI Risk Analysis for application 6632d1c0e2f3a4b5c6d81452 ---
+[2026-06-11 09:17:02.364] [INFO]  New client profile: age=27, sex=male, job=1, housing=rent, saving_accounts=little, checking_account=NA
+[2026-06-11 09:17:02.365] [INFO]  Credit request: amount=5000.0€, duration=24 months
+[2026-06-11 09:17:02.374] [DEBUG] Encoded vector: [age=-0.82, sex=1, job=1, housing=1, saving_accounts=0, checking_account=0, credit_amount=-0.44, duration=-0.61]
+[2026-06-11 09:17:02.381] [DEBUG] 5-NN distances:
+  - neighbor_1: dist=0.177, class=bad,  weight=5.65
+  - neighbor_2: dist=0.214, class=good, weight=4.67
+  - neighbor_3: dist=0.239, class=bad,  weight=4.18
+  - neighbor_4: dist=0.295, class=bad,  weight=3.39
+  - neighbor_5: dist=0.311, class=good, weight=3.22
+[2026-06-11 09:17:02.384] [INFO]  Weighted votes: bad=13.22 (53.9%), good=7.89 (32.2%) -> Risk: bad
+[2026-06-11 09:17:02.386] [INFO]  Risk score=61.5%, Interest rate=11.2%
+[2026-06-11 09:17:02.388] [INFO]  ⚠️  Elevated risk detected. Application flagged for admin priority review.
+[2026-06-11 09:17:02.395] [INFO]  ✅ Analysis complete for app 6632d1c0e2f3a4b5c6d81452 — Risk=bad, Rate=11.20%
+
+======================================================================
+ DAILY SUMMARY — 2026-06-11
+======================================================================
+[2026-06-11 23:59:59.000] [INFO]  === KNN Engine Daily Stats ===
+[2026-06-11 23:59:59.001] [INFO]  Total inferences today: 5 (3 estimates + 2 full analyses)
+[2026-06-11 23:59:59.002] [INFO]  Risk distribution today: good=2 (40%), bad=3 (60%)
+[2026-06-11 23:59:59.003] [INFO]  Average inference time: 14.2ms
+[2026-06-11 23:59:59.004] [INFO]  Average risk score: 53.5%
+[2026-06-11 23:59:59.005] [INFO]  Average interest rate: 10.24%
+[2026-06-11 23:59:59.006] [INFO]  Min score: 34.1% (karim.benali) | Max score: 74.6% (sara.menasri)
+[2026-06-11 23:59:59.007] [INFO]  Model accuracy (last eval on test set): 76.3% | F1-score: 0.71

@@ -1,0 +1,153 @@
+-- BankRisk MongoDB Database Query Log
+-- Format: [TIMESTAMP] [COLLECTION] [OPERATION] Filter/Document | Execution time
+-- Database: bankrisk_db | MongoDB 6.0 (Atlas M0 Free Tier)
+-- Date: 2026-06-11
+
+----------------------------------------------------------------------
+ SESSION 1 — karim.benali@gmail.com (Client)
+----------------------------------------------------------------------
+
+[2026-06-11 07:04:23.131] [clients] FIND        { user_email: "karim.benali@gmail.com" }                          | 2ms  | 1 doc
+[2026-06-11 07:04:23.148] [credit_applications] FIND  { client: ObjectId("6632a4f1b3e2c7a0f9d11231") } SORT { submission_date: -1 } | 4ms  | 2 docs
+[2026-06-11 07:04:25.018] [messages] FIND        { recipient: "karim.benali@gmail.com" }                          | 3ms  | 0 docs
+
+[2026-06-11 07:07:34.948] [clients] FIND         { user_email: "karim.benali@gmail.com" }                         | 1ms  | 1 doc
+[2026-06-11 07:07:35.001] [credit_applications] INSERT ONE {
+    client: ObjectId("6632a4f1b3e2c7a0f9d11231"),
+    credit_amount: 12000.0, duration: 48, purpose: "car",
+    risk: "pending", status: "pending",
+    submission_date: ISODate("2026-06-11T07:07:35.001Z")
+}                                                                                                                    | 6ms  | inserted: 6632b9c0d4e1f8b2a0c53418
+
+[2026-06-11 07:07:35.041] [credit_applications] UPDATE ONE  { _id: ObjectId("6632b9c0d4e1f8b2a0c53418") }
+    $set: { risk: "good", risk_score: 38.2, interest_rate: 8.1,
+            analysis_details: { score: 38.2, risk: "good", interest_rate: 8.1,
+              factors: { age: 34, job: 2, housing: "rent", saving_accounts: "moderate",
+                         credit_amount: 12000, duration: 48 } } }                                                   | 5ms  | matched: 1, modified: 1
+
+[2026-06-11 07:07:35.109] [credit_applications] FIND  { client: ObjectId("6632a4f1b3e2c7a0f9d11231") } SORT { submission_date: -1 } | 3ms  | 3 docs
+
+----------------------------------------------------------------------
+ SESSION 2 — admin@btk-bank.dz (Admin — évaluation)
+----------------------------------------------------------------------
+
+[2026-06-11 07:45:19.006] [credit_applications] FIND  {} SORT { submission_date: -1 }                              | 18ms | 28 docs
+[2026-06-11 07:45:19.316] [credit_applications] AGGREGATE [
+    { $group: { _id: "$status", count: { $sum: 1 } } }
+]                                                                                                                    | 9ms  | 3 groups: pending=11, approved=12, rejected=5
+
+[2026-06-11 07:45:21.774] [credit_applications] FIND ONE  { _id: ObjectId("6632b9c0d4e1f8b2a0c53418") }           | 2ms  | 1 doc
+[2026-06-11 07:45:22.011] [clients] FIND ONE      { _id: ObjectId("6632a4f1b3e2c7a0f9d11231") }                   | 1ms  | 1 doc
+
+[2026-06-11 07:47:05.519] [credit_applications] UPDATE ONE  { _id: ObjectId("6632b9c0d4e1f8b2a0c53418") }
+    $set: { status: "approved", risk: "good",
+            evaluator_comment: "Profil solide, emploi stable, faible endettement.",
+            evaluation_date: ISODate("2026-06-11T07:47:05.518Z") }                                                  | 4ms  | matched: 1, modified: 1
+
+[2026-06-11 07:47:48.128] [messages] INSERT ONE {
+    sender: "admin@btk-bank.dz", recipient: "karim.benali@gmail.com",
+    subject: "Décision sur votre demande de crédit",
+    body: "Votre demande de crédit a été approuvée. Veuillez trouver...",
+    thread_id: ObjectId("6632ca4e8f1b2c3d4e5f6789"),
+    created_at: ISODate("2026-06-11T07:47:48.121Z"), is_read: false
+}                                                                                                                    | 5ms  | inserted: 6632ca4e8f1b2c3d4e5f6000
+
+[2026-06-11 07:47:48.184] [attachments] INSERT ONE {
+    filename: "accord_credit_K.BENALI.pdf", file_size: 188416,
+    content_type: "application/pdf",
+    message: ObjectId("6632ca4e8f1b2c3d4e5f6000"),
+    uploaded_by: "admin@btk-bank.dz",
+    upload_date: ISODate("2026-06-11T07:47:48.181Z")
+}                                                                                                                    | 3ms  | inserted: 6632ca7af1b2c3d4e5f67890
+
+[2026-06-11 07:51:12.894] [credit_applications] FIND ONE  { _id: ObjectId("6631f7a2b3c4d5e6f7a81102") }           | 2ms  | 1 doc
+[2026-06-11 07:51:13.003] [clients] FIND ONE      { _id: ObjectId("6631c9d0e2f3a4b5c6d71009") }                   | 1ms  | 1 doc
+
+[2026-06-11 07:52:44.018] [credit_applications] UPDATE ONE  { _id: ObjectId("6631f7a2b3c4d5e6f7a81102") }
+    $set: { status: "rejected", risk: "bad",
+            evaluator_comment: "Score de risque trop élevé. Compte courant insuffisant.",
+            evaluation_date: ISODate("2026-06-11T07:52:44.013Z") }                                                  | 4ms  | matched: 1, modified: 1
+
+[2026-06-11 07:53:02.779] [messages] INSERT ONE {
+    sender: "admin@btk-bank.dz", recipient: "sara.menasri@outlook.com",
+    subject: "Information sur votre dossier de crédit",
+    body: "Suite à l'analyse de votre dossier, nous avons le regret...",
+    thread_id: ObjectId("6632cc1e9a2b3c4d5e6f7801"),
+    created_at: ISODate("2026-06-11T07:53:02.778Z"), is_read: false
+}                                                                                                                    | 5ms  | inserted: 6632cc2e0a1b2c3d4e5f7802
+
+[2026-06-11 07:53:02.812] [attachments] INSERT ONE {
+    filename: "lettre_refus_S.MENASRI.pdf", file_size: 172032,
+    content_type: "application/pdf",
+    message: ObjectId("6632cc2e0a1b2c3d4e5f7802"),
+    uploaded_by: "admin@btk-bank.dz"
+}                                                                                                                    | 3ms  | inserted: 6632c1a4b5d6e7f8a09b2244
+
+----------------------------------------------------------------------
+ SESSION 3 — sara.menasri@outlook.com (Client — lecture message)
+----------------------------------------------------------------------
+
+[2026-06-11 08:30:06.027] [credit_applications] FIND  { client: ObjectId("6631c9d0e2f3a4b5c6d71009") } SORT { submission_date: -1 } | 3ms  | 1 doc
+[2026-06-11 08:30:07.452] [messages] FIND         { recipient: "sara.menasri@outlook.com" }                       | 2ms  | 1 doc
+[2026-06-11 08:30:07.454] [messages] UPDATE ONE   { _id: ObjectId("6632cc2e0a1b2c3d4e5f7802") }
+    $set: { is_read: true }                                                                                          | 2ms  | matched: 1, modified: 1
+
+[2026-06-11 08:30:09.207] [attachments] FIND ONE  { _id: ObjectId("6632c1a4b5d6e7f8a09b2244") }                   | 1ms  | 1 doc
+
+[2026-06-11 08:34:23.002] [messages] INSERT ONE {
+    sender: "sara.menasri@outlook.com", recipient: "admin@btk-bank.dz",
+    subject: "RE: Information sur votre dossier de crédit",
+    body: "Bonjour, j'aimerais comprendre les raisons précises du refus afin d'améliorer...",
+    thread_id: ObjectId("6632cc1e9a2b3c4d5e6f7801"),
+    created_at: ISODate("2026-06-11T08:34:22.998Z"), is_read: false
+}                                                                                                                    | 4ms  | inserted: 6632d0a0b1c2d3e4f5061234
+
+----------------------------------------------------------------------
+ SESSION 4 — yacine.hamidi@yahoo.fr (Nouvel utilisateur)
+----------------------------------------------------------------------
+
+[2026-06-11 09:12:45.203] [credit_applications] FIND  { client_id: null }                                         | 1ms  | 0 docs
+[2026-06-11 09:17:02.350] [clients] INSERT ONE {
+    user_email: "yacine.hamidi@yahoo.fr", age: 27, sex: "male",
+    job: 1, housing: "rent", saving_accounts: "little", checking_account: "NA",
+    created_at: ISODate("2026-06-11T09:17:02.349Z")
+}                                                                                                                    | 5ms  | inserted: 6632d1a0b2c3d4e5f6071234
+
+[2026-06-11 09:17:02.362] [credit_applications] INSERT ONE {
+    client: ObjectId("6632d1a0b2c3d4e5f6071234"),
+    credit_amount: 5000.0, duration: 24, purpose: "furniture/equipment",
+    risk: "pending", status: "pending",
+    submission_date: ISODate("2026-06-11T09:17:02.361Z")
+}                                                                                                                    | 5ms  | inserted: 6632d1c0e2f3a4b5c6d81452
+
+[2026-06-11 09:17:02.395] [credit_applications] UPDATE ONE  { _id: ObjectId("6632d1c0e2f3a4b5c6d81452") }
+    $set: { risk: "bad", risk_score: 61.5, interest_rate: 11.2,
+            analysis_details: { score: 61.5, risk: "bad", interest_rate: 11.2 } }                                   | 4ms  | matched: 1, modified: 1
+
+----------------------------------------------------------------------
+ SESSION 5 — admin@btk-bank.dz (Admin — gestion clients)
+----------------------------------------------------------------------
+
+[2026-06-11 10:05:34.445] [clients] FIND         {}                                                                | 12ms | 12 docs
+[2026-06-11 10:05:50.116] [clients] UPDATE ONE   { _id: ObjectId("6632a4f1b3e2c7a0f9d11231") }
+    $set: { checking_account: "rich", updated_at: ISODate("2026-06-11T10:05:50.112Z") }                            | 3ms  | matched: 1, modified: 1
+
+[2026-06-11 10:06:44.908] [clients] INSERT ONE {
+    user_email: "leila.brahimi@email.dz", age: 41, sex: "female",
+    job: 3, housing: "own", saving_accounts: "rich", checking_account: "moderate",
+    created_at: ISODate("2026-06-11T10:06:44.904Z")
+}                                                                                                                    | 4ms  | inserted: 6632d3a1b2c3d4e5f7091566
+
+[2026-06-11 10:07:12.008] [credit_applications] AGGREGATE [
+    { $group: { _id: "$status", count: { $sum: 1 } } }
+]                                                                                                                    | 10ms | pending=12, approved=12, rejected=5
+
+[2026-06-11 10:08:44.325] [credit_applications] AGGREGATE [
+    { $group: { _id: "$risk", count: { $sum: 1 } } }
+]                                                                                                                    | 8ms  | good=16, bad=13, pending=0
+
+----------------------------------------------------------------------
+ SLOW QUERIES (> 50ms)
+----------------------------------------------------------------------
+
+[2026-06-11 10:08:44.330] [SLOW QUERY] [credit_applications] FIND {} with full document scan (no index on risk field). Duration: 68ms. Recommendation: Add index on { risk: 1, status: 1 }
