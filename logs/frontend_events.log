@@ -1,0 +1,97 @@
+{
+  "log_source": "BankRisk Frontend React App",
+  "log_format": "JSON structured events",
+  "generated_date": "2026-06-11",
+  "environment": "production",
+  "events": [
+
+    {"timestamp": "2026-06-11T07:04:22.510Z", "level": "INFO", "type": "PAGE_VIEW", "user": null, "session_id": "sess_k1a2b3c4", "route": "/login", "user_agent": "Chrome/124", "ip": "41.229.15.87"},
+
+    {"timestamp": "2026-06-11T07:04:22.540Z", "level": "INFO", "type": "USER_ACTION", "user": null, "session_id": "sess_k1a2b3c4", "action": "FORM_SUBMIT", "form": "LoginForm", "payload": {"email": "karim.benali@gmail.com"}},
+
+    {"timestamp": "2026-06-11T07:04:22.601Z", "level": "INFO", "type": "API_CALL", "user": "karim.benali@gmail.com", "session_id": "sess_k1a2b3c4", "method": "POST", "endpoint": "/api/auth/login/", "status": 200, "duration_ms": 61},
+
+    {"timestamp": "2026-06-11T07:04:22.605Z", "level": "INFO", "type": "AUTH_EVENT", "user": "karim.benali@gmail.com", "session_id": "sess_k1a2b3c4", "event": "LOGIN_SUCCESS", "role": "client"},
+
+    {"timestamp": "2026-06-11T07:04:22.610Z", "level": "INFO", "type": "NAVIGATION", "user": "karim.benali@gmail.com", "session_id": "sess_k1a2b3c4", "from": "/login", "to": "/client/dashboard"},
+
+    {"timestamp": "2026-06-11T07:04:23.120Z", "level": "INFO", "type": "API_CALL", "user": "karim.benali@gmail.com", "session_id": "sess_k1a2b3c4", "method": "GET", "endpoint": "/api/credit/applications/by_client/", "status": 200, "duration_ms": 112, "result_count": 2},
+
+    {"timestamp": "2026-06-11T07:04:25.008Z", "level": "INFO", "type": "API_CALL", "user": "karim.benali@gmail.com", "session_id": "sess_k1a2b3c4", "method": "GET", "endpoint": "/api/credit/messages/", "status": 200, "duration_ms": 84, "unread": 0},
+
+    {"timestamp": "2026-06-11T07:06:08.001Z", "level": "INFO", "type": "NAVIGATION", "user": "karim.benali@gmail.com", "session_id": "sess_k1a2b3c4", "from": "/client/dashboard", "to": "/client/apply-credit"},
+
+    {"timestamp": "2026-06-11T07:06:11.002Z", "level": "INFO", "type": "USER_ACTION", "user": "karim.benali@gmail.com", "session_id": "sess_k1a2b3c4", "action": "INTEREST_ESTIMATE_REQUEST", "params": {"age": 34, "job": 2, "housing": "rent", "saving_accounts": "moderate", "credit_amount": 8000, "duration": 36}},
+
+    {"timestamp": "2026-06-11T07:06:11.880Z", "level": "INFO", "type": "API_CALL", "user": "karim.benali@gmail.com", "session_id": "sess_k1a2b3c4", "method": "POST", "endpoint": "/api/credit/applications/estimate_interest/", "status": 200, "duration_ms": 129, "result": {"risk": "good", "score": 34.1, "interest_rate": 7.4}},
+
+    {"timestamp": "2026-06-11T07:06:40.001Z", "level": "INFO", "type": "USER_ACTION", "user": "karim.benali@gmail.com", "session_id": "sess_k1a2b3c4", "action": "FORM_FIELD_CHANGE", "form": "CreditApplicationForm", "field": "credit_amount", "old_value": 8000, "new_value": 12000},
+
+    {"timestamp": "2026-06-11T07:06:41.001Z", "level": "INFO", "type": "USER_ACTION", "user": "karim.benali@gmail.com", "session_id": "sess_k1a2b3c4", "action": "FORM_FIELD_CHANGE", "form": "CreditApplicationForm", "field": "duration", "old_value": 36, "new_value": 48},
+
+    {"timestamp": "2026-06-11T07:06:45.320Z", "level": "INFO", "type": "API_CALL", "user": "karim.benali@gmail.com", "session_id": "sess_k1a2b3c4", "method": "POST", "endpoint": "/api/credit/applications/estimate_interest/", "status": 200, "duration_ms": 142, "result": {"risk": "good", "score": 38.2, "interest_rate": 8.1}},
+
+    {"timestamp": "2026-06-11T07:07:34.910Z", "level": "INFO", "type": "USER_ACTION", "user": "karim.benali@gmail.com", "session_id": "sess_k1a2b3c4", "action": "FORM_SUBMIT", "form": "CreditApplicationForm", "payload": {"credit_amount": 12000, "duration": 48, "purpose": "car", "housing": "rent", "saving_accounts": "moderate", "checking_account": "little"}},
+
+    {"timestamp": "2026-06-11T07:07:35.090Z", "level": "INFO", "type": "API_CALL", "user": "karim.benali@gmail.com", "session_id": "sess_k1a2b3c4", "method": "POST", "endpoint": "/api/credit/applications/", "status": 201, "duration_ms": 179},
+
+    {"timestamp": "2026-06-11T07:07:35.095Z", "level": "INFO", "type": "UI_EVENT", "user": "karim.benali@gmail.com", "session_id": "sess_k1a2b3c4", "event": "SUCCESS_NOTIFICATION", "message": "Votre demande de crédit a été soumise avec succès. Score de risque : 38.2%"},
+
+    {"timestamp": "2026-06-11T07:09:00.001Z", "level": "INFO", "type": "USER_ACTION", "user": "karim.benali@gmail.com", "session_id": "sess_k1a2b3c4", "action": "CLICK", "element": "LogoutButton"},
+
+    {"timestamp": "2026-06-11T07:09:02.770Z", "level": "INFO", "type": "AUTH_EVENT", "user": "karim.benali@gmail.com", "session_id": "sess_k1a2b3c4", "event": "LOGOUT", "session_duration_minutes": 4.7},
+
+    {"timestamp": "2026-06-11T08:30:05.100Z", "level": "INFO", "type": "AUTH_EVENT", "user": "sara.menasri@outlook.com", "session_id": "sess_s7d8e9f0", "event": "LOGIN_SUCCESS", "role": "client", "device": "iPhone iOS 17"},
+
+    {"timestamp": "2026-06-11T08:30:05.110Z", "level": "INFO", "type": "NAVIGATION", "user": "sara.menasri@outlook.com", "session_id": "sess_s7d8e9f0", "from": "/login", "to": "/client/dashboard"},
+
+    {"timestamp": "2026-06-11T08:30:07.440Z", "level": "INFO", "type": "UI_EVENT", "user": "sara.menasri@outlook.com", "session_id": "sess_s7d8e9f0", "event": "NOTIFICATION_BADGE", "type": "unread_messages", "count": 1},
+
+    {"timestamp": "2026-06-11T08:30:08.001Z", "level": "INFO", "type": "USER_ACTION", "user": "sara.menasri@outlook.com", "session_id": "sess_s7d8e9f0", "action": "CLICK", "element": "MessagesLink", "badge_count": 1},
+
+    {"timestamp": "2026-06-11T08:30:09.192Z", "level": "INFO", "type": "USER_ACTION", "user": "sara.menasri@outlook.com", "session_id": "sess_s7d8e9f0", "action": "DOWNLOAD_ATTACHMENT", "filename": "lettre_refus_S.MENASRI.pdf", "size_bytes": 172032},
+
+    {"timestamp": "2026-06-11T08:30:09.200Z", "level": "INFO", "type": "API_CALL", "user": "sara.menasri@outlook.com", "session_id": "sess_s7d8e9f0", "method": "GET", "endpoint": "/api/credit/attachments/6632c1a4b5d6e7f8a09b2244/", "status": 200, "duration_ms": 21, "bytes_transferred": 172032},
+
+    {"timestamp": "2026-06-11T08:34:18.001Z", "level": "INFO", "type": "USER_ACTION", "user": "sara.menasri@outlook.com", "session_id": "sess_s7d8e9f0", "action": "CLICK", "element": "ReplyButton", "thread_id": "6632cc1e9a2b3c4d5e6f7801"},
+
+    {"timestamp": "2026-06-11T08:34:22.991Z", "level": "INFO", "type": "USER_ACTION", "user": "sara.menasri@outlook.com", "session_id": "sess_s7d8e9f0", "action": "FORM_SUBMIT", "form": "ReplyMessageForm", "payload": {"body_length": 124}},
+
+    {"timestamp": "2026-06-11T08:34:22.993Z", "level": "INFO", "type": "API_CALL", "user": "sara.menasri@outlook.com", "session_id": "sess_s7d8e9f0", "method": "POST", "endpoint": "/api/credit/messages/", "status": 201, "duration_ms": 44},
+
+    {"timestamp": "2026-06-11T08:35:01.330Z", "level": "INFO", "type": "AUTH_EVENT", "user": "sara.menasri@outlook.com", "session_id": "sess_s7d8e9f0", "event": "LOGOUT", "session_duration_minutes": 4.9},
+
+    {"timestamp": "2026-06-11T09:12:44.490Z", "level": "INFO", "type": "PAGE_VIEW", "user": null, "session_id": "sess_y9z0a1b2", "route": "/register"},
+
+    {"timestamp": "2026-06-11T09:12:44.499Z", "level": "INFO", "type": "USER_ACTION", "user": null, "session_id": "sess_y9z0a1b2", "action": "FORM_SUBMIT", "form": "RegisterForm", "payload": {"email": "yacine.hamidi@yahoo.fr"}},
+
+    {"timestamp": "2026-06-11T09:12:44.501Z", "level": "INFO", "type": "API_CALL", "user": null, "session_id": "sess_y9z0a1b2", "method": "POST", "endpoint": "/api/auth/register/", "status": 201, "duration_ms": 198},
+
+    {"timestamp": "2026-06-11T09:12:44.795Z", "level": "INFO", "type": "AUTH_EVENT", "user": "yacine.hamidi@yahoo.fr", "session_id": "sess_y9z0a1b2", "event": "REGISTER_AND_LOGIN", "role": "client"},
+
+    {"timestamp": "2026-06-11T09:14:55.001Z", "level": "INFO", "type": "NAVIGATION", "user": "yacine.hamidi@yahoo.fr", "session_id": "sess_y9z0a1b2", "from": "/client/dashboard", "to": "/client/apply-credit"},
+
+    {"timestamp": "2026-06-11T09:17:02.329Z", "level": "INFO", "type": "USER_ACTION", "user": "yacine.hamidi@yahoo.fr", "session_id": "sess_y9z0a1b2", "action": "FORM_SUBMIT", "form": "CreditApplicationForm"},
+
+    {"timestamp": "2026-06-11T09:17:02.398Z", "level": "INFO", "type": "API_CALL", "user": "yacine.hamidi@yahoo.fr", "session_id": "sess_y9z0a1b2", "method": "POST", "endpoint": "/api/credit/applications/", "status": 201, "duration_ms": 69},
+
+    {"timestamp": "2026-06-11T09:17:02.402Z", "level": "WARN", "type": "UI_EVENT", "user": "yacine.hamidi@yahoo.fr", "session_id": "sess_y9z0a1b2", "event": "RISK_WARNING_DISPLAYED", "message": "Score de risque élevé détecté (61.5%). Taux d'intérêt appliqué : 11.2%."},
+
+    {"timestamp": "2026-06-11T10:05:33.875Z", "level": "INFO", "type": "AUTH_EVENT", "user": "admin@btk-bank.dz", "session_id": "sess_adm_c3d4e5", "event": "LOGIN_SUCCESS", "role": "admin"},
+
+    {"timestamp": "2026-06-11T10:05:33.882Z", "level": "INFO", "type": "NAVIGATION", "user": "admin@btk-bank.dz", "session_id": "sess_adm_c3d4e5", "from": "/login", "to": "/admin/dashboard"},
+
+    {"timestamp": "2026-06-11T10:05:34.440Z", "level": "INFO", "type": "API_CALL", "user": "admin@btk-bank.dz", "session_id": "sess_adm_c3d4e5", "method": "GET", "endpoint": "/api/credit/clients/", "status": 200, "duration_ms": 88, "result_count": 12},
+
+    {"timestamp": "2026-06-11T10:06:44.901Z", "level": "INFO", "type": "USER_ACTION", "user": "admin@btk-bank.dz", "session_id": "sess_adm_c3d4e5", "action": "FORM_SUBMIT", "form": "NewClientForm", "payload": {"email": "leila.brahimi@email.dz", "age": 41, "job": 3, "housing": "own"}},
+
+    {"timestamp": "2026-06-11T10:06:44.905Z", "level": "INFO", "type": "API_CALL", "user": "admin@btk-bank.dz", "session_id": "sess_adm_c3d4e5", "method": "POST", "endpoint": "/api/credit/clients/", "status": 201, "duration_ms": 41},
+
+    {"timestamp": "2026-06-11T10:22:01.000Z", "level": "INFO", "type": "AUTH_EVENT", "user": "admin@btk-bank.dz", "session_id": "sess_adm_c3d4e5", "event": "LOGOUT", "session_duration_minutes": 16.5},
+
+    {"timestamp": "2026-06-11T11:14:05.000Z", "level": "ERROR", "type": "AUTH_EVENT", "user": null, "session_id": "sess_UNKNOWN_82.141.22.90", "event": "LOGIN_FAILED", "reason": "invalid_credentials", "ip": "82.141.22.90", "attempt": 1},
+    {"timestamp": "2026-06-11T11:14:06.310Z", "level": "ERROR", "type": "AUTH_EVENT", "user": null, "session_id": "sess_UNKNOWN_82.141.22.90", "event": "LOGIN_FAILED", "reason": "invalid_credentials", "ip": "82.141.22.90", "attempt": 2},
+    {"timestamp": "2026-06-11T11:14:07.108Z", "level": "ERROR", "type": "AUTH_EVENT", "user": null, "session_id": "sess_UNKNOWN_82.141.22.90", "event": "LOGIN_FAILED", "reason": "invalid_credentials", "ip": "82.141.22.90", "attempt": 3},
+    {"timestamp": "2026-06-11T11:14:07.509Z", "level": "CRITICAL", "type": "SECURITY_EVENT", "user": null, "session_id": "sess_UNKNOWN_82.141.22.90", "event": "RATE_LIMIT_TRIGGERED", "ip": "82.141.22.90", "block_duration_minutes": 15}
+  ]
+}
