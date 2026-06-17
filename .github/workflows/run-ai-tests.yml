@@ -7,7 +7,7 @@ on:
 jobs:
   run-tests:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -36,17 +36,19 @@ jobs:
         continue-on-error: true
 
       - name: Send Callback to AutoTestGenerator
-      if: always() # IMPORTANT: Force l'exécution même si une étape précédente a échoué
+        if: always()
         run: |
           STATUS="true"
+
           if [ "${{ steps.run_django_tests.outcome }}" != "success" ]; then
             STATUS="false"
           fi
-          
-          # Sécuriser la lecture des logs (créer le fichier s'il n'existe pas)
+
+          # Créer le fichier de logs s'il n'existe pas
           touch backend/test_logs.txt
+
           LOGS=$(cat backend/test_logs.txt)
-          
+
           curl -X POST "${{ github.event.client_payload.callback_url }}" \
             -H "Content-Type: application/json" \
             -d "{
