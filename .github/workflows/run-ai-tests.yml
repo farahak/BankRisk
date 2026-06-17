@@ -36,12 +36,15 @@ jobs:
         continue-on-error: true
 
       - name: Send Callback to AutoTestGenerator
+      if: always() # IMPORTANT: Force l'exécution même si une étape précédente a échoué
         run: |
           STATUS="true"
           if [ "${{ steps.run_django_tests.outcome }}" != "success" ]; then
             STATUS="false"
           fi
           
+          # Sécuriser la lecture des logs (créer le fichier s'il n'existe pas)
+          touch backend/test_logs.txt
           LOGS=$(cat backend/test_logs.txt)
           
           curl -X POST "${{ github.event.client_payload.callback_url }}" \
@@ -50,5 +53,5 @@ jobs:
               \"testRunId\": \"${{ github.event.client_payload.test_run_id }}\",
               \"success\": $STATUS,
               \"logs\": $(echo \"$LOGS\" | jq -R -s '.'),
-              \"errorMessage\": \"\"
+              \"errorMessage\": \"Workflow completed with status: ${{ job.status }}\"
             }"
